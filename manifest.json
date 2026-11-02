@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "X Content Creator",
+  "version": "1.0.92",
+  "description": "X Content Creator — agent trên X, nút Tạo Reply + badge Sorsa Score trên timeline. Pogo là nguồn task tùy chọn.",
+  "permissions": [
+    "storage",
+    "sidePanel",
+    "alarms",
+    "tabs",
+    "scripting",
+    "nativeMessaging"
+  ],
+  "host_permissions": [
+    "https://pogo.social/*",
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "https://api.openai.com/*",
+    "https://api.x.ai/*",
+    "https://api.sorsa.io/*",
+    "https://smmfollows.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*"],
+      "js": ["content/x-navigation-guard.js"],
+      "run_at": "document_start",
+      "world": "MAIN",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [
+        "content/x-content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_title": "Mở X Content Creator"
+  },
+  "side_panel": {
+    "default_path": "sidepanel/sidepanel.html"
+  }
+}

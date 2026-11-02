@@ -1,0 +1,15 @@
+[
+  {"id":"feed-en","kind":"browse_reply","text":"We cut withdrawal fees from $5 to $1. Small transfers should be affordable, even when the network gets busy.","reply":"The $1 fee makes small transfers more practical. Keeping it steady during congestion will matter just as much."},
+  {"id":"feed-vi","kind":"browse_reply","text":"Nhóm mình chuyển lịch họp từ mỗi ngày sang hai lần một tuần. Thời gian tập trung tăng nhưng việc xử lý vướng mắc chậm hơn.","reply":"Giảm họp giúp tập trung hơn, nhưng nên có một kênh xử lý vướng mắc trong ngày để người bị kẹt không phải chờ đến buổi họp tiếp theo."},
+  {"id":"mention-en","kind":"mention_reply","text":"Does the $1 fee apply during congestion too?","parent_text":"We lowered withdrawal fees to $1. Congestion pricing is still under review.","reply":"Congestion pricing is still under review, so I can't confirm the $1 fee during those periods yet."},
+  {"id":"mention-vi","kind":"mention_reply","text":"Vậy có cần đổi toàn bộ hệ thống không?","parent_text":"Chúng tôi đang thử thay bộ nhớ đệm, chưa thay cơ sở dữ liệu.","reply":"Chưa cần đổi toàn bộ; hiện tại chỉ thử bộ nhớ đệm để xem có giải quyết được điểm nghẽn không."},
+  {"id":"greeting","kind":"mention_reply","text":"GM","reply":"GM"},
+  {"id":"manual-owner","kind":"mention_reply","text":"new profile pic","parent_text":"My generated avatar is a plush version of me.","owner":true,"review":true,"reply":"Haha, this might have to be my new profile pic."},
+  {"id":"manual-feed","kind":"browse_reply","text":"We replaced polling with event notifications and cut idle API calls by 80%.","review":true,"reply":"An 80% drop in idle calls is a useful gain. A fallback check could still catch missed events without returning to constant polling."},
+  {"id":"quote-en","kind":"quote","text":"A local library extended evening opening hours after surveying shift workers.","reply":"Asking shift workers first helped the library find an access problem that a daytime survey could easily miss."},
+  {"id":"quote-vi","kind":"quote","text":"Thư viện mở cửa thêm hai buổi tối để người làm ca có thể ghé sau giờ làm.","reply":"Thêm giờ buổi tối giúp người làm ca có cơ hội sử dụng thư viện; số lượt ghé trong khung giờ mới sẽ cho thấy nhu cầu thực tế."},
+  {"id":"empty","kind":"browse_reply","text":"","reply":"SKIP_REPLY"},
+  {"id":"duplicate","kind":"mention_reply","text":"Is this available now?","already_replied":"true","reply":"SKIP_REPLY"},
+  {"id":"pogo-reply","kind":"reply","text":"We cut withdrawal fees from $5 to $1.","pogo":true,"reply":"Cutting withdrawals to $1 makes smaller transfers less costly. Is that a permanent fee change or a temporary subsidy?"},
+  {"id":"pogo-quote","kind":"quote","text":"A library extended evening hours after surveying shift workers.","pogo":true,"reply":"Asking shift workers first can reveal access barriers that a daytime survey misses."}
+]

@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>X Content Creator</title>
+    <link rel="stylesheet" href="sidepanel.css">
+  </head>
+  <body>
+    <div class="app">
+      <header class="app-header panel">
+        <div class="app-brand">
+          <img class="app-avatar" src="../icons/brand.png" width="40" height="40" alt="">
+          <div class="app-brand-text">
+            <strong class="app-title">X Content Creator</strong>
+            <span class="app-tag">Tự động trên X</span>
+          </div>
+        </div>
+      </header>
+
+      <nav class="tabs tabs-grid" role="tablist" aria-label="Chế độ panel">
+        <div class="tabs-row">
+          <button aria-controls="view-agent" type="button" class="tab active" role="tab" id="tab-agent" data-view="agent" aria-selected="true">Agent</button>
+          <button aria-controls="view-tasks" type="button" class="tab" role="tab" id="tab-tasks" data-view="tasks" aria-selected="false">Nguồn</button>
+          <button aria-controls="view-follow" type="button" class="tab" role="tab" id="tab-follow" data-view="follow" aria-selected="false">Follow</button>
+          <button aria-controls="view-smm" type="button" class="tab" role="tab" id="tab-smm" data-view="smm" aria-selected="false">SMM</button>
+        </div>
+        <div class="tabs-row">
+          <button aria-controls="view-behavior" type="button" class="tab" role="tab" id="tab-behavior" data-view="behavior" aria-selected="false">Hành vi</button>
+          <button aria-controls="view-ai" type="button" class="tab" role="tab" id="tab-ai" data-view="ai" aria-selected="false">AI</button>
+          <button aria-controls="view-activity" type="button" class="tab" role="tab" id="tab-activity" data-view="activity" aria-selected="false">Nhật ký</button>
+        </div>
+      </nav>
+
+      <!-- AGENT -->
+      <div aria-labelledby="tab-agent" role="tabpanel" id="view-agent" class="view workspace">
+        <div class="ag-shell"><header class="workspace-intro"><span class="uf-eyebrow">TRUNG TÂM ĐIỀU KHIỂN</span><h2>Agent trên X</h2><p>Chỉ bật một chế độ dùng tab X. Dừng chế độ đang chạy trước khi bật chế độ khác.</p></header>
+          <section class="ag-hero panel workspace-overview">
+            <div class="ag-hero-top">
+              <div>
+                <div class="ag-live" id="ag-live-dot" aria-hidden="true"></div>
+                <strong id="agent-status-title">Chưa chạy</strong>
+                <span class="ag-sub" id="agent-status-kicker">X Content Creator</span>
+                <div class="ag-pills" id="agent-status-meta"></div>
+              </div>
+              
+            </div>
+            <div class="metrics ag-metrics" id="agent-metrics"></div>
+            <p id="ag-rt-window" class="field-hint"></p>
+            <p id="agent-rest-info" class="field-hint" role="status" hidden></p>
+            <div class="ag-now" id="ag-now">
+              <div class="ag-now-row">
+                <span class="ag-now-k">Hiện tại</span>
+                <span id="agent-status-detail">Bấm Bắt đầu để chạy trên X.</span>
+              </div>
+              <div class="ag-now-row">
+                <span class="ag-now-k">Tiếp theo</span>
+                <strong id="ag-next">—</strong>
+              </div>
+            </div>
+            
+          </section>
+
+          <section class="panel ag-card workspace-card">
+            <div class="uf-section-head workspace-section-head"><span class="uf-section-number">01</span><div><h3>Kết nối tài khoản</h3><p>Mở X để kết nối và kiểm tra phiên đăng nhập.</p></div></div>
+            <div class="ag-x" id="agent-x-summary"></div>
+            <div class="ag-tools">
+              <button type="button" id="btn-open-x" class="btn ghost">Mở X</button>
+              
+              
+              
+            <details class="workspace-inline-details"><summary>Công cụ kiểm tra &amp; thống kê</summary><div class="workspace-tools"><button type="button" id="btn-force-scroll" class="btn ghost">Cuộn thử</button><button type="button" id="btn-agent-tick" class="btn ghost">Chạy một bước</button><button type="button" id="btn-agent-reset-stats" class="btn ghost">Đặt lại thống kê</button></div></details></div>
+          </section>
+
+          <section class="panel ag-card workspace-card">
+            <div class="uf-section-head workspace-section-head"><span class="uf-section-number">02</span><div><h3>Cấu hình đang dùng</h3><p>Điều chỉnh nguồn và hành động tại tab Hành vi.</p></div></div>
+            <div class="ag-config" id="agent-config-summary"></div>
+          </section>
+
+          <section class="panel ag-card">
+            <div class="ag-card-head">
+              <div class="workspace-card-title">Hàng đợi công việc</div>
+              <button type="button" id="btn-clear-queue" class="btn danger ghost ag-mini">Xóa</button>
+            </div>
+            <div id="agent-job-list" class="ag-q" aria-live="polite"></div>
+          </section>
+
+          <details class="panel ag-card ag-setup" id="agent-setup">
+            <summary class="ag-card-title">Hướng dẫn thiết lập nhanh</summary>
+            <ol class="setup-list" id="agent-setup-list"><li><strong>AI</strong> → lưu API key để soạn trả lời hoặc trích dẫn.</li><li><strong>Nguồn</strong> → kết nối Pogo nếu cần.</li><li>Đăng nhập <strong>x.com</strong> trên Chrome này.</li><li><strong>Hành vi</strong> → chọn nguồn và hành động rồi lưu.</li><li><strong>Bắt đầu</strong> → agent mở trang chủ X và chạy.</li></ol>
+          </details>
+        <div class="uf-control-bar workspace-controls"><div class="workspace-control-actions"><button type="button" id="btn-agent-start" class="btn primary">Bắt đầu</button><button type="button" id="btn-agent-pause" class="btn danger ghost hidden" hidden>Tạm dừng</button><button type="button" id="btn-agent-kill" class="btn ghost" title="Dừng khẩn cấp">Dừng khẩn</button></div><p id="agent-msg" class="action-msg ag-msg" role="status"></p></div></div>
+      </div>
+
+      <!-- SOURCES — Pogo API lấy link campaign; Home browse ở Behavior -->
+      <div aria-labelledby="tab-tasks" role="tabpanel" id="view-tasks" class="view hidden workspace" hidden>
+        <div class="src-shell">
+          <header class="workspace-intro">
+            <span class="uf-eyebrow">NGUỒN CÔNG VIỆC</span>
+            <h2>Pogo &amp; list link</h2>
+            <p>Đồng bộ chiến dịch Pogo qua API và dán list link bài X để agent xử lý.</p>
+          </header>
+
+          <section class="panel workspace-card">
+            <h3>Tài khoản X của bạn</h3>
+            <label class="field" for="source-own-handle">
+              <span>Username X của bạn</span>
+              <input id="source-own-handle" type="text" placeholder="@username" autocomplete="off" spellcheck="false" maxlength="16">
+            </label>
+            <p class="field-hint">Bỏ qua bài của bạn trong Pogo và list link. Nhập username của tài khoản X đang dùng.</p>
+            <button type="button" id="btn-source-account-save" class="btn primary">Lưu username</button>
+            <p id="source-account-msg" class="action-msg" role="status"></p>
+          </section>
+
+          <section class="src-hero panel workspace-overview">
+            <div class="src-hero-top uf-overview-head">
+              <div class="src-hero-copy">
+                <span class="uf-status">
+                  <span class="src-live" id="src-live-dot" aria-hidden="true"></span>
+                  <strong id="src-title">Chưa có phiên Pogo</strong>
+                </span>
+                <p class="src-sub" id="source-hint">Kết nối Telegram → Quét → mở link trên X</p>
+              </div>
+              <div class="src-actions" role="group" aria-label="Điều khiển Pogo">
+                <button type="button" id="btn-scan" class="btn primary">Quét</button>
+                <button type="button" id="btn-start" class="btn ghost" title="Theo dõi liên tục">Theo dõi</button>
+                <button type="button" id="btn-pause" class="btn ghost">Tạm dừng</button>
+              </div>
+            </div>
+            <div id="status" class="src-status" aria-live="polite"></div>
+            <p id="action-msg" class="action-msg src-msg" role="status"></p>
+            <div id="confirm-box" class="confirm hidden" hidden>
+              <div class="confirm-title">Xác nhận hồ sơ</div>
+              <p id="confirm-text">Token Pogo đang đúng hồ sơ X của bạn?</p>
+              <p id="confirm-account" class="confirm-account"></p>
+              <div class="btn-row">
+                <button type="button" id="btn-confirm-yes" class="btn primary grow">Đúng, tiếp tục</button>
+                <button type="button" id="btn-confirm-no" class="btn">Hủy</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel src-card workspace-card">
+            <div class="uf-section-head workspace-section-head">
+              <span class="uf-section-number">01</span>
+              <div>
+                <h3>Phiên Pogo</h3>
+                <p>Tự cấp Bearer qua Telegram; task, lượt RT và giờ đối soát lấy từ API.</p>
+              </div>
+            </div>
+            <div id="api-box" class="src-token">
+              <label class="src-check">
+                <input type="checkbox" id="pogo-auto-auth">
+                <span>Tự cấp Bearer qua phiên Telegram trên máy</span>
+              </label>
+              <div class="src-token-actions">
+                <button type="button" id="btn-pogo-auto-auth" class="btn ghost">Kiểm tra kết nối Telegram</button>
+                <span id="src-rt-power" class="src-chip src-rt-chip" title="Số lượt RT Pogo còn đủ điểm và 25% điểm (từ API)">RW —</span>
+              </div>
+              <p id="pogo-auto-auth-status" class="field-hint" role="status">Chưa bật tự cấp token. Cần hoàn tất thiết lập chương trình Telegram trên máy.</p>
+              <p id="src-pogo-settlement" class="field-hint src-settlement" aria-live="off">Chưa đọc giờ đối soát từ API.</p>
+            </div>
+          </section>
+
+          <section class="panel src-card workspace-card">
+            <div class="uf-section-head workspace-section-head">
+              <span class="uf-section-number">02</span>
+              <div>
+                <h3>Tương tác theo link</h3>
+                <p>Dán list link bài X; agent làm theo hành động đã bật ở tab Hành vi.</p>
+              </div>
+            </div>
+            <label class="fu-field grow">
+              <span>Danh sách link</span>
+              <textarea id="link-list" class="fu-area" rows="5" spellcheck="false" placeholder="https://x.com/user/status/123&#10;https://x.com/other/status/456"></textarea>
+            </label>
+            <p class="field-hint" id="link-list-status">Chưa có link. Dán chat/log rồi bấm Chuẩn hóa, hoặc mỗi dòng một URL.</p>
+            <div class="btn-row src-link-actions">
+              <button type="button" id="btn-link-normalize" class="btn accent">Chuẩn hóa</button>
+              <button type="button" id="btn-link-save" class="btn primary">Lưu list</button>
+              <button type="button" id="btn-link-clear" class="btn danger ghost">Xóa list</button>
+            </div>
+            <p id="link-list-msg" class="action-msg" role="status"></p>
+          </section>
+
+          <section class="panel src-card workspace-card">
+            <div class="uf-section-head workspace-section-head">
+              <span class="uf-section-number">03</span>
+              <div>
+                <h3>Chiến dịch đã đồng bộ</h3>
+                <p>Lọc, tìm và mở bài Pogo đã quét về.</p>
+              </div>
+            </div>
+            <div class="src-campaign-toolbar">
+              <div class="src-tools">
+                <select aria-label="Lọc chiến dịch" id="filter" class="src-select" title="Lọc — Còn việc ẩn bài đã reply">
+                  <option value="todo" selected>Còn việc</option>
+                  <option value="locked">Locked</option>
+                  <option value="all">Tất cả (gồm đã reply)</option>
+                  <option value="reply_open">Còn trả lời</option>
+                  <option value="retweet_open">Còn đăng lại</option>
+                  <option value="quote_open">Còn trích dẫn</option>
+                </select>
+                <input aria-label="Tìm chiến dịch" id="search" class="src-search" type="search" placeholder="Tìm tài khoản hoặc mã bài" autocomplete="off">
+              </div>
+              <div class="workspace-toolbar src-campaign-actions">
+                <button type="button" id="btn-clear" class="btn danger ghost src-mini">Xóa bộ nhớ</button>
+                <button type="button" id="btn-export" class="btn ghost src-mini">Xuất JSON</button>
+              </div>
+            </div>
+            <section id="list" class="list src-list" aria-label="Danh sách link Pogo"></section>
+          </section>
+
+          <section class="panel src-card workspace-card">
+            <div class="uf-section-head workspace-section-head">
+              <span class="uf-section-number">04</span>
+              <div>
+                <h3>Bounties Pogo</h3>
+                <p>Quét mỗi phút. Tự join khi bật. Báo bot Telegram khi có bounty mới hoặc khi join.</p>
+              </div>
+            </div>
+            <label class="src-check">
+              <input type="checkbox" id="pogo-bounty-auto-join">
+              <span>Tự join bounty mới khi đủ điều kiện (phí Hops không hoàn)</span>
+            </label>
+            <p class="field-hint">FCFS: bật tự join khi không cầm máy. Bot Telegram báo bounty mới / đã join (cần Setup thông báo Telegram).</p>
+            <div class="src-token-actions">
+              <button type="button" id="btn-pogo-bounty-refresh" class="btn ghost">Quét bounty</button>
+              <span id="src-bounty-chip" class="src-chip src-rt-chip">Bounty —</span>
+            </div>
+            <p id="pogo-bounty-status" class="field-hint" role="status">Chưa quét bounty.</p>
+            <section id="pogo-bounty-list" class="list src-list" aria-label="Danh sách bounty Pogo"></section>
+          </section>
+        </div>
+      </div>
+
+      <!-- BEHAVIOR -->
+      <div aria-labelledby="tab-behavior" role="tabpanel" id="view-behavior" class="view hidden workspace bh-shell" hidden>
+        <header class="workspace-intro bh-intro">
+          <span class="uf-eyebrow">THIẾT LẬP AGENT</span>
+          <h2>Hành vi &amp; tốc độ</h2>
+          <p>Nguồn · hành động · nhịp chạy — nhóm rõ, lưu một lần là đủ.</p>
+        </header>
+
+        <section class="panel workspace-overview bh-hero" aria-label="Tóm tắt Hành vi">
+          <div class="bh-hero-copy">
+            <strong>Luồng gợi ý</strong>
+            <p>Chọn nguồn → bật hành động → chỉnh tỷ lệ nâng cao → <em>Lưu cấu hình</em>.</p>
+          </div>
+          <div class="bh-hero-pills" aria-hidden="true">
+            <span class="bh-pill">Nguồn</span>
+            <span class="bh-pill-sep">→</span>
+            <span class="bh-pill">Hành động</span>
+            <span class="bh-pill-sep">→</span>
+            <span class="bh-pill">Mục tiêu</span>
+          </div>
+        </section>
+
+        <section class="panel workspace-card bh-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">01</span><div><h3>Tài khoản &amp; nhịp</h3><p>Handle của bạn và khoảng nghỉ giữa các tương tác.</p></div></div>
+          <label class="field">
+            <span>Handle X của bạn</span>
+            <input id="ag-own-handle" type="text" placeholder="vd: myhandle" autocomplete="off" spellcheck="false">
+          </label>
+          <div class="bh-subcard">
+            <div class="bh-subcard-head"><strong>Nghỉ sau tương tác</strong><span>giây</span></div>
+            <div class="filters-grid two-col">
+              <label class="field">
+                <span>Từ</span>
+                <input id="ag-delay-min" type="number" min="1" max="600" step="1">
+              </label>
+              <label class="field">
+                <span>Đến</span>
+                <input id="ag-delay-max" type="number" min="1" max="900" step="1">
+              </label>
+            </div>
+            <p class="field-hint">Áp dụng sau khi tương tác xong. Chỉ tìm bài: chờ 2–4 giây mỗi đợt cuộn. Đọc bài dùng khoảng riêng; giữa hành động vẫn 6–16 giây.</p>
+          </div>
+          <label class="field">
+            <span>Mức tốc độ</span>
+            <select id="ag-speed-preset">
+              <option value="safe">Chậm</option>
+              <option value="normal">Vừa phải</option>
+              <option value="fast">Nhanh</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="panel workspace-card bh-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">02</span><div><h3>Nguồn &amp; chế độ chạy</h3><p>Bật nguồn được phép dùng. List link (nếu bật) trước Pogo.</p></div></div>
+
+          <div class="bh-group">
+            <div class="bh-group-label">Công việc</div>
+            <div class="bh-tile-grid">
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-mod-pogo"><span><strong>Chiến dịch Pogo</strong><small>Task từ Pogo</small></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-mod-links"><span><strong>List link</strong><small>Link đã dán ở Nguồn</small></span></label>
+            </div>
+          </div>
+
+          <div class="bh-group">
+            <div class="bh-group-label">Lướt X</div>
+            <div class="bh-tile-grid">
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-mod-home"><span><strong>For You</strong><small>Trang chủ · cuộn + tương tác</small></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-mod-following-feed"><span><strong>Following</strong><small>Tab trên Home</small></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-mod-lists"><span><strong>Lists</strong><small>Một list X</small></span></label>
+            </div>
+            <label class="field bh-dependent">
+              <span>URL list X</span>
+              <input id="ag-list-url" type="url" placeholder="https://x.com/i/lists/123… hoặc /user/lists/slug" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+
+          <div class="bh-nest" id="bh-notif-nest">
+            <label class="bh-tile check-inline bh-tile-wide"><input type="checkbox" id="ag-mod-notifications"><span><strong>Thông báo</strong><small>Mentions trước, All bổ sung · tối đa 3 hội thoại / đợt</small></span></label>
+            <div class="bh-nest-body" data-when="ag-mod-notifications">
+              <label class="field">
+                <span>Kiểm tra mỗi (phút)</span>
+                <input id="ag-notif-cooldown-min" type="number" min="5" max="180" step="5" title="60 = Pogo/feed chính; 15 = trả lời mention nhanh.">
+              </label>
+              <p class="field-hint">Chỉ chạy khi xong việc đang làm. Gợi ý <strong>60</strong> phút nếu Pogo/feed là chính; <strong>15</strong> nếu muốn reply nhanh.</p>
+            </div>
+          </div>
+
+          <label class="bh-tile check-inline bh-tile-wide"><input type="checkbox" id="ag-mod-following"><span><strong>Follow từ list</strong><small>Username ở tab Follow khi lướt Home/Following</small></span></label>
+
+          <div class="bh-subcard">
+            <div class="bh-subcard-head"><strong>Lịch xoay nguồn X</strong><span>For You → Following → Lists</span></div>
+            <p class="field-hint">Đồng hồ chỉ đếm lúc đang đọc/cuộn. Tạm dừng khi mở bài, soạn Reply/Quote, nghỉ hoặc Pause. Thông báo xử lý riêng.</p>
+            <div class="filters-grid two-col">
+              <label class="field"><span>For You (phút)</span><input id="ag-schedule-home-min" type="number" min="1" max="120" step="1" title="Thời gian quét tab For You."></label>
+              <label class="field"><span>Following (phút)</span><input id="ag-schedule-following-min" type="number" min="1" max="120" step="1" title="Thời gian quét tab Following."></label>
+              <label class="field"><span>Lists (phút)</span><input id="ag-schedule-lists-min" type="number" min="1" max="120" step="1" title="Thời gian quét danh sách X đã cấu hình."></label>
+            </div>
+            <label class="check-inline"><input type="checkbox" id="ag-schedule-early-empty" checked> Chuyển sớm khi hết bài mới</label>
+            <label class="check-inline"><input type="checkbox" id="ag-schedule-keep-resume" checked> Giữ trạng thái nguồn khi Pause/Resume</label>
+          </div>
+
+          <div class="bh-group">
+            <div class="bh-group-label">Chế độ chạy</div>
+            <label class="field">
+              <span>Ưu tiên nguồn</span>
+              <select id="ag-priority">
+                <option value="pogo_then_browse">Pogo trước → rồi lướt X</option>
+                <option value="pogo_only">Chỉ Pogo</option>
+                <option value="browse_only">Chỉ lướt X (không Pogo)</option>
+              </select>
+            </label>
+            <div class="bh-tile-grid">
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-skip-own"><span><strong>Bỏ qua bài mình</strong></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-execute"><span><strong>Thực thi trên X</strong></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-ui-create-reply"><span><strong>Nút ✨ Reply</strong><small>Trên timeline X</small></span></label>
+              <label class="bh-tile check-inline"><input type="checkbox" id="ag-ui-sorsa-badge"><span><strong>Badge Sorsa</strong><small>Điểm public cạnh username</small></span></label>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel workspace-card bh-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">03</span><div><h3>Hành động trên X</h3><p>Chỉ tick những gì muốn agent làm.</p></div></div>
+          <div class="bh-tile-grid bh-actions">
+            <label class="bh-tile check-inline"><input type="checkbox" id="ag-act-like"><span><strong>Thích bài</strong></span></label>
+            <label class="bh-tile check-inline"><input type="checkbox" id="ag-act-follow"><span><strong>Theo dõi</strong></span></label>
+            <label class="bh-tile check-inline"><input type="checkbox" id="ag-act-reply"><span><strong>Trả lời</strong><small>Cần API key</small></span></label>
+            <label class="bh-tile check-inline"><input type="checkbox" id="ag-act-quote"><span><strong>Trích dẫn</strong><small>Cần API key</small></span></label>
+          </div>
+          <div class="bh-nest">
+            <label class="bh-tile check-inline bh-tile-wide"><input type="checkbox" id="ag-act-retweet"><span><strong>Cho phép đăng lại</strong><small>Bắt buộc cho RT Pogo · dùng lượt retweet_power</small></span></label>
+            <label class="check-inline bh-indent"><input type="checkbox" id="ag-home-retweet"> Đăng lại khi lướt Home <small class="bh-inline-hint">(tỷ lệ ở nâng cao · không dùng lượt Pogo)</small></label>
+          </div>
+        </section>
+
+        <section class="panel workspace-card bh-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">04</span><div><h3>Mục tiêu trong ngày</h3><p>Đặt 0 = không giới hạn. Reset 00:00 giờ Việt Nam.</p></div></div>
+          <label class="bh-tile check-inline bh-tile-wide"><input id="ag-daily-enabled" type="checkbox"><span><strong>Tự dừng từng hành động khi đủ mục tiêu</strong><small>Like tính tổng Like dạo và Like khi mở bài</small></span></label>
+          <div class="filters-grid two-col bh-goals">
+            <label class="field"><span>Reply / ngày</span><input id="ag-daily-reply" type="number" min="0" max="9999" step="1"></label>
+            <label class="field"><span>Like / ngày</span><input id="ag-daily-like" type="number" min="0" max="9999" step="1"></label>
+            <label class="field"><span>Follow / ngày</span><input id="ag-daily-follow" type="number" min="0" max="9999" step="1"></label>
+            <label class="field"><span>Quote / ngày</span><input id="ag-daily-quote" type="number" min="0" max="9999" step="1"></label>
+          </div>
+          <label class="field"><span>Khi mọi hành động đang bật đều đủ</span><select id="ag-daily-after"><option value="browse">Chỉ lướt tiếp, không tương tác</option><option value="pause">Dừng agent</option></select></label>
+          <p class="field-hint">Follow cộng dồn Agent + tab Follow. Giới hạn 30 phút dùng chung. Không tự tăng tốc để đủ số.</p>
+        </section>
+
+        <details class="panel workspace-card workspace-disclosure bh-card bh-advanced">
+          <summary>
+            <span><strong>Tùy chọn nâng cao</strong><small>Tỷ lệ tương tác · Follow tác giả / Sorsa · đọc · phiên</small></span>
+            <span class="uf-chevron" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="workspace-disclosure-body">
+            <div class="bh-group">
+              <div class="bh-group-label">Tỷ lệ trên feed</div>
+              <p class="field-hint">Tick hành động = cho phép. Agent quét bài rồi mới xét tỷ lệ. Reply → mở bài, soạn và tự gửi.</p>
+              <div class="filters-grid two-col">
+                <label class="field"><span>Like (%)</span><input id="ag-like-pct" type="number" min="0" max="100" title="Tỷ lệ chọn Like trên bài hợp lệ."></label>
+                <label class="field"><span>Trả lời (%)</span><input id="ag-reply-pct" type="number" min="0" max="100" title="Tỷ lệ chọn Reply trên bài hợp lệ."></label>
+                <label class="field"><span>Follow tác giả (%)</span><input id="ag-follow-pct" type="number" min="0" max="100" title="Cần bật chế độ Follow tác giả bên dưới."></label>
+                <label class="field"><span>Follow từ list (%)</span><input id="ag-list-follow-pct" type="number" min="0" max="100" title="Cần bật nguồn Follow từ list."></label>
+                <label class="field"><span>Đăng lại Home (%)</span><input id="ag-retweet-pct" type="number" min="0" max="100" title="Cần bật Cho phép đăng lại và Đăng lại khi lướt Home."></label>
+              </div>
+            </div>
+
+            <div class="bh-nest bh-nest-accent" id="bh-author-follow-nest">
+              <label class="uf-option uf-option-featured">
+                <input type="checkbox" id="ag-random-author-follow">
+                <span>
+                  <strong>Follow ngẫu nhiên tác giả sau tương tác</strong>
+                  <small>Bắt buộc bật ô này thì ngưỡng Sorsa bên dưới mới có hiệu lực. Home / Following / Lists · có thể song song Follow từ list.</small>
+                </span>
+              </label>
+              <div class="bh-nest-body" data-when="ag-random-author-follow">
+                <label class="field">
+                  <span>Sorsa lớn hơn</span>
+                  <input id="ag-author-follow-sorsa-min" type="number" min="0" step="1" value="500">
+                </label>
+                <p class="field-hint">Nhập <strong>500</strong> = chỉ Follow khi Sorsa <strong>&gt;500</strong>. Thiếu điểm hoặc bằng ngưỡng → bỏ qua. Bộ lọc tab Follow vẫn áp dụng thêm.</p>
+              </div>
+            </div>
+
+            <div class="bh-group">
+              <div class="bh-group-label">Đọc &amp; phiên</div>
+              <div class="filters-grid two-col">
+                <label class="field"><span>Đọc tối thiểu (ms)</span><input id="ag-read-min" type="number" min="500" max="60000"></label>
+                <label class="field"><span>Đọc tối đa (ms)</span><input id="ag-read-max" type="number" min="500" max="120000"></label>
+              </div>
+              <label class="uf-option uf-option-featured">
+                <input type="checkbox" id="ag-continuous-run">
+                <span><strong>Chạy liên tục 24/24</strong><small>Không dừng theo số vòng. Giữ hạn ngày; sang ngày mới tự tiếp tục.</small></span>
+              </label>
+              <label class="uf-option uf-option-featured">
+                <input type="checkbox" id="ag-adaptive-rest">
+                <span><strong>Nghỉ linh hoạt theo tải</strong><small>Tải cao 30/20 · bình thường 45/15 · thấp 60/10. Hết task 5–10 phút; lỗi mạng 1→2→5→15.</small></span>
+              </label>
+              <div class="filters-grid two-col" id="bh-loop-fields">
+                <label class="field"><span>Số vòng mỗi phiên</span><input id="ag-max-loops" type="number" min="1" max="500" title="Khi tắt chạy liên tục."></label>
+                <label class="field"><span>Giới hạn vòng tối đa</span><input id="ag-session-limit" type="number" min="1" max="1000" title="Khi tắt chạy liên tục."></label>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="uf-control-bar workspace-controls bh-save-bar">
+          <button type="button" id="btn-behavior-save" class="btn primary grow">Lưu cấu hình hành vi</button>
+          <p id="behavior-msg" class="action-msg" role="status"></p>
+        </div>
+      </div>
+
+      <!-- FOLLOW + UNFOLLOW -->
+      <div aria-labelledby="tab-follow" role="tabpanel" id="view-follow" class="view hidden" hidden>
+        <div class="fu-shell fu-connect-shell" data-fu-mode="follow">
+          <header class="workspace-intro fu-intro">
+            <span class="uf-eyebrow">QUẢN LÝ KẾT NỐI</span>
+            <h2>Follow &amp; Unfollow</h2>
+            <p>Theo dõi tài khoản mới hoặc dọn danh sách Following — chọn chế độ bên dưới.</p>
+          </header>
+
+          <div class="fu-mode segment" role="radiogroup" aria-label="Follow hoặc Unfollow">
+            <label class="segment-item fu-mode-item fu-mode-follow">
+              <input type="radio" name="fu-mode" id="fu-mode-follow" value="follow" checked>
+              <span>
+                <strong>Follow</strong>
+                <small>Theo dõi mới</small>
+              </span>
+            </label>
+            <label class="segment-item fu-mode-item fu-mode-unfollow">
+              <input type="radio" name="fu-mode" id="fu-mode-unfollow" value="unfollow">
+              <span>
+                <strong>Unfollow</strong>
+                <small>Dọn Following</small>
+              </span>
+            </label>
+          </div>
+
+          <div id="fu-pane-follow" class="fu-pane workspace uf-workspace">
+            <section class="panel uf-overview" aria-labelledby="fl-heading">
+              <div class="uf-overview-head">
+                <div>
+                  <span class="uf-eyebrow">PHÁT TRIỂN KẾT NỐI</span>
+                  <h2 id="fl-heading">Theo dõi tài khoản mới</h2>
+                </div>
+                <span class="uf-status">
+                  <span class="fu-live" id="fl-live-dot" aria-hidden="true"></span>
+                  <strong id="fl-status-title">Sẵn sàng</strong>
+                </span>
+              </div>
+              <p class="uf-description" id="fl-status-meta">Chọn nguồn và bộ lọc trước khi bắt đầu.</p>
+              <div class="metrics fu-metrics" id="fl-metrics"></div>
+              <div class="uf-progress-row"><span>Tiến độ hôm nay</span><strong id="fl-progress-label">0 / 100</strong></div>
+              <progress id="fl-progress" class="uf-progress" max="100" value="0" aria-label="Tiến độ follow hôm nay"></progress>
+            </section>
+
+            <div id="fl-settings" class="uf-settings">
+              <section class="panel uf-card" aria-labelledby="fl-source-heading">
+                <div class="uf-section-head workspace-section-head">
+                  <span class="uf-section-number">01</span>
+                  <div>
+                    <h3 id="fl-source-heading">Chọn nguồn tài khoản</h3>
+                    <p>Nhập danh sách riêng hoặc lấy người theo dõi của một tài khoản.</p>
+                  </div>
+                </div>
+                <div class="segment uf-source-switch" role="radiogroup" aria-label="Nguồn follow">
+                  <label class="segment-item">
+                    <input type="radio" name="fl-source" id="fl-src-list" value="list" checked>
+                    <span>Nhập danh sách</span>
+                  </label>
+                  <label class="segment-item">
+                    <input type="radio" name="fl-source" id="fl-src-kol" value="kol_followers">
+                    <span>Người theo dõi KOL</span>
+                  </label>
+                </div>
+                <div id="fl-box-list" class="fu-stack">
+                  <label class="fu-field"><span>Danh sách tài khoản</span><textarea id="fl-list" class="fu-area" rows="4" spellcheck="false" placeholder="@alice
+@bob
+https://x.com/carol"></textarea></label>
+                  <label class="fu-check"><input id="fl-engage-latest" type="checkbox"><span>Sau Follow thành công, luôn Like + Reply bài mới nhất</span></label>
+                  <p class="fu-help">Chỉ áp dụng danh sách tài khoản/link. Chọn bài mới nhất của chính tác giả, không nhầm bài ghim cũ hoặc bài đăng lại. Reply dùng AI đã lưu; Like/Reply vẫn theo hạn mức ngày và chống gửi trùng.</p>
+                </div>
+                <div id="fl-box-kol" class="fu-stack hidden" hidden>
+                  <label class="fu-field"><span>Tài khoản KOL</span><input id="fl-kol" class="fu-input" type="text" spellcheck="false" placeholder="@VitalikButerin"></label>
+                </div>
+              </section>
+
+              <section class="panel uf-card" aria-labelledby="fl-filter-heading">
+                <div class="uf-section-head workspace-section-head">
+                  <span class="uf-section-number">02</span>
+                  <div>
+                    <h3 id="fl-filter-heading">Điều kiện theo dõi</h3>
+                    <p>Chỉ theo dõi tài khoản đáp ứng bộ lọc.</p>
+                  </div>
+                </div>
+                <div class="fu-grid">
+                  <label class="fu-field"><span>Sorsa tối thiểu</span><input id="fl-sorsa-min" type="number" placeholder="200"></label>
+                  <label class="fu-field"><span>Sorsa tối đa</span><input id="fl-sorsa-max" type="number" placeholder="∞"></label>
+                  <label class="fu-field"><span>Người theo dõi tối thiểu</span><input id="fl-flw-min" type="number" placeholder="0"></label>
+                  <label class="fu-field"><span>Người theo dõi tối đa</span><input id="fl-flw-max" type="number" placeholder="∞"></label>
+                </div>
+                <div class="fu-grid">
+                  <label class="fu-field grow">
+                    <span>Trạng thái xác minh</span>
+                    <select id="fl-verified">
+                      <option value="any">Tất cả</option>
+                      <option value="require">Có tick</option>
+                      <option value="exclude">Không tick</option>
+                    </select>
+                  </label>
+                </div>
+                <label class="fu-check"><input type="checkbox" id="fl-allow-missing-sorsa"><span>Cho phép chưa có Sorsa</span></label>
+                <details class="workspace-inline-details">
+                  <summary>Danh sách cho phép &amp; bỏ qua</summary>
+                  <div class="fu-grid">
+                    <label class="fu-field grow"><span>Luôn bỏ qua</span><textarea id="fl-blacklist" rows="2" spellcheck="false" placeholder="@spam"></textarea></label>
+                    <label class="fu-field grow"><span>Chỉ theo dõi danh sách này</span><textarea id="fl-whitelist" rows="2" spellcheck="false" placeholder="Để trống để không giới hạn"></textarea></label>
+                  </div>
+                </details>
+              </section>
+
+              <details class="panel uf-card uf-disclosure uf-settings-section">
+                <summary>
+                  <span class="uf-section-head">
+                    <span class="uf-section-number">03</span>
+                    <span><strong>Giới hạn &amp; tốc độ</strong><small>Giới hạn mỗi ngày, mỗi 30 phút và khoảng nghỉ.</small></span>
+                  </span>
+                  <span class="uf-chevron" aria-hidden="true">⌄</span>
+                </summary>
+                <div class="uf-disclosure-body">
+                  <div class="fu-grid">
+                    <label class="fu-field"><span>Tối đa mỗi ngày</span><input id="fl-daily" type="number"></label>
+                    <label class="fu-field"><span>Tối đa mỗi 30 phút</span><input id="fl-max30" type="number"></label>
+                    <label class="fu-field"><span>Nghỉ tối thiểu (giây)</span><input id="fl-delay-min" type="number" title="min giây"></label>
+                    <label class="fu-field"><span>Nghỉ tối đa (giây)</span><input id="fl-delay-max" type="number" title="max giây"></label>
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <section class="panel uf-card uf-activity" aria-labelledby="fl-log-heading">
+              <div class="uf-log-head">
+                <h3 id="fl-log-heading">Hoạt động gần đây</h3>
+                <span class="uf-help">Kết quả theo dõi và lý do bỏ qua</span>
+              </div>
+              <div aria-label="Nhật ký theo dõi tài khoản" role="log" id="fl-log" class="activity-list fu-log"></div>
+            </section>
+
+            <div class="uf-control-bar">
+              <div class="uf-control-actions">
+                <button type="button" id="fl-start" class="btn primary">Bắt đầu Follow</button>
+                <button type="button" id="fl-stop" class="btn danger ghost" disabled>Dừng</button>
+                <button type="button" id="fl-save" class="btn ghost" title="Lưu">Lưu</button>
+              </div>
+              <p id="fl-msg" class="action-msg uf-feedback" role="status"></p>
+              <span class="uf-help">Bắt đầu sẽ lưu cấu hình và tự mở/focus tab x.com nếu chưa có.</span>
+            </div>
+          </div>
+
+          <div id="fu-pane-unfollow" class="fu-pane uf-workspace hidden" hidden>
+            <section class="panel uf-overview" aria-labelledby="uf-heading">
+              <div class="uf-overview-head">
+                <div>
+                  <span class="uf-eyebrow">QUẢN LÝ KẾT NỐI</span>
+                  <h2 id="uf-heading">Dọn danh sách Following</h2>
+                </div>
+                <span class="uf-status"><span class="fu-live" id="uf-live-dot" aria-hidden="true"></span><strong id="uf-status-title">Sẵn sàng</strong></span>
+              </div>
+              <p class="uf-description" id="uf-status-meta">Chọn nguồn và điều kiện trước khi bắt đầu.</p>
+              <div class="metrics fu-metrics" id="uf-metrics"></div>
+              <div class="uf-progress-row"><span>Tiến độ hôm nay</span><strong id="uf-progress-label">0 / 80</strong></div>
+              <progress id="uf-progress" class="uf-progress" max="80" value="0" aria-label="Tiến độ hủy follow hôm nay"></progress>
+              <div class="fu-now" id="uf-now" hidden>
+                <div class="uf-current-top"><span class="uf-eyebrow">ĐANG XỬ LÝ</span><strong id="uf-now-handle">—</strong></div>
+                <p id="uf-now-step">—</p>
+                <span id="uf-now-seen" class="uf-help">Đã xem 0 tài khoản</span>
+              </div>
+            </section>
+
+            <div id="uf-settings" class="uf-settings">
+              <section class="panel uf-card" aria-labelledby="uf-source-heading">
+                <div class="uf-section-head"><span class="uf-section-number">01</span><div><h3 id="uf-source-heading">Chọn nguồn tài khoản</h3><p>Quét Following hoặc nhập danh sách riêng.</p></div></div>
+                <div class="segment uf-source-switch" role="radiogroup" aria-label="Nguồn unfollow">
+                  <label class="segment-item"><input type="radio" name="uf-source" id="uf-src-own" value="own_following" checked><span>Following của tôi</span></label>
+                  <label class="segment-item"><input type="radio" name="uf-source" id="uf-src-list" value="list"><span>Nhập danh sách</span></label>
+                </div>
+                <div id="uf-box-own" class="fu-stack">
+                  <label class="fu-field"><span>Tài khoản X của bạn</span><input id="uf-own" class="fu-input" type="text" spellcheck="false" autocomplete="off" placeholder="@username" aria-describedby="uf-own-hint"></label>
+                  <p id="uf-own-hint" class="uf-help">Để trống để nhận diện từ tab X đang kết nối.</p>
+                </div>
+                <div id="uf-box-list" class="fu-stack hidden" hidden>
+                  <label class="fu-field"><span>Tài khoản muốn hủy follow</span><textarea id="uf-list" class="fu-area" rows="3" spellcheck="false" placeholder="@alice
+@bob
+https://x.com/carol" aria-describedby="uf-list-hint"></textarea></label>
+                  <p id="uf-list-hint" class="uf-help">Mỗi dòng một tài khoản, hoặc phân cách bằng dấu phẩy. Chỉ xử lý tài khoản trong danh sách Following của bạn; không mở profile.</p>
+                </div>
+              </section>
+
+              <section class="panel uf-card" aria-labelledby="uf-target-heading">
+                <div class="uf-section-head"><span class="uf-section-number">02</span><div><h3 id="uf-target-heading">Điều kiện hủy follow</h3><p>Chọn những tài khoản cần dọn khỏi Following.</p></div></div>
+                <label class="uf-option uf-option-featured"><input type="checkbox" id="uf-only-not-flback" checked><span><strong>Chỉ người không follow lại</strong><small>Giữ những tài khoản đang follow bạn.</small></span></label>
+                <details class="uf-disclosure">
+                  <summary><span>Bộ lọc nâng cao</span><span class="uf-chevron" aria-hidden="true">⌄</span></summary>
+                  <div class="uf-disclosure-body">
+                    <div class="fu-grid">
+                      <label class="fu-field"><span>Trạng thái xác minh</span><select id="uf-verified"><option value="exclude">Không có tick</option><option value="any">Tất cả</option><option value="require">Có tick</option></select></label>
+                      <label class="fu-field"><span>Sorsa thấp hơn</span><input id="uf-sorsa-max" type="number" min="0" placeholder="Không giới hạn"></label>
+                      <label class="fu-field grow"><span>Số người theo dõi tối đa</span><input id="uf-flw-max" type="number" min="0" placeholder="Không giới hạn"></label>
+                    </div>
+                    <label class="fu-field uf-field-spaced"><span>Danh sách ưu tiên hủy follow</span><textarea id="uf-blacklist" rows="2" spellcheck="false" placeholder="@account1, @account2" aria-describedby="uf-blacklist-hint"></textarea></label>
+                    <p id="uf-blacklist-hint" class="uf-help">Xử lý trước trong nguồn đã chọn; vẫn phải thỏa mọi điều kiện hủy và quy tắc giữ.</p>
+                  </div>
+                </details>
+              </section>
+
+              <details class="panel uf-card uf-disclosure uf-settings-section" open>
+                <summary><span class="uf-section-head"><span class="uf-section-number uf-number-keep">03</span><span><strong>Tài khoản cần giữ</strong><small>Được ưu tiên trước mọi điều kiện hủy follow.</small></span></span><span class="uf-chevron" aria-hidden="true">⌄</span></summary>
+                <div class="uf-disclosure-body">
+                  <div class="uf-option-list">
+                    <label class="uf-option"><input type="checkbox" id="uf-protect-missing" checked><span><strong>Giữ khi chưa có điểm Sorsa</strong><small>Bỏ qua tài khoản chưa xác định được điểm.</small></span></label>
+                    <label class="uf-option"><input type="checkbox" id="uf-protect-verified"><span><strong>Giữ tài khoản có tick</strong></span></label>
+                  </div>
+                  <label class="fu-field uf-field-spaced"><span>Giữ tài khoản có Sorsa từ</span><input id="uf-protect-sorsa" type="number" min="0" placeholder="Để trống để tắt"></label>
+                  <label class="fu-field uf-field-spaced"><span>Luôn giữ các tài khoản này</span><textarea id="uf-whitelist" rows="2" spellcheck="false" placeholder="@friend, @partner"></textarea></label>
+                  <p class="uf-help">Danh sách giữ luôn thắng danh sách ưu tiên hủy. Chỉ cần khớp một quy tắc giữ là tài khoản được giữ lại. Chưa xác định được dữ liệu cần thiết thì bỏ qua.</p>
+                  <p id="uf-rules-summary" class="uf-help" aria-live="polite"></p>
+                </div>
+              </details>
+
+              <details class="panel uf-card uf-disclosure uf-settings-section">
+                <summary><span class="uf-section-head"><span class="uf-section-number">04</span><span><strong>Giới hạn &amp; tốc độ</strong><small id="uf-pace-summary">80/ngày · 20/30 phút · nghỉ 12–28 giây</small></span></span><span class="uf-chevron" aria-hidden="true">⌄</span></summary>
+                <div class="uf-disclosure-body">
+                  <div class="fu-grid">
+                    <label class="fu-field"><span>Tối đa mỗi ngày</span><input id="uf-daily" type="number" min="1"></label>
+                    <label class="fu-field"><span>Tối đa mỗi 30 phút</span><input id="uf-max30" type="number" min="1"></label>
+                    <label class="fu-field"><span>Nghỉ tối thiểu (giây)</span><input id="uf-delay-min" type="number" min="0"></label>
+                    <label class="fu-field"><span>Nghỉ tối đa (giây)</span><input id="uf-delay-max" type="number" min="0"></label>
+                  </div>
+                </div>
+              </details>
+            </div>
+
+            <section class="panel uf-card uf-activity" aria-labelledby="uf-log-heading">
+              <div class="uf-log-head"><h3 id="uf-log-heading">Hoạt động gần đây</h3><span id="uf-log-count" class="uf-help">Chưa có hoạt động</span></div>
+              <div id="uf-log" class="activity-list fu-log" role="log" aria-label="Nhật ký hủy follow"></div>
+            </section>
+
+            <div class="uf-control-bar">
+              <div class="uf-control-actions">
+                <button type="button" id="uf-start" class="btn primary">Bắt đầu Unfollow</button>
+                <button type="button" id="uf-stop" class="btn danger ghost" disabled>Dừng</button>
+                <button type="button" id="uf-save" class="btn ghost" title="Lưu cấu hình Unfollow">Lưu</button>
+              </div>
+              <p id="uf-msg" class="action-msg uf-feedback" role="status"></p>
+              <span id="uf-save-state" class="uf-help">Bắt đầu sẽ lưu cấu hình hiện tại.</span>
+            </div>
+          </div>
+
+          <details class="panel fh-panel workspace-card workspace-disclosure">
+            <summary>
+              <span><strong>Danh sách đã Following</strong><small id="fh-count">0 tài khoản</small></span>
+              <span class="uf-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="workspace-disclosure-body">
+              <p id="fh-msg" class="field-hint">Follow xong hoặc đã Following sẵn: tự chuyển khỏi list chờ sang đây. Chưa kiểm tra sẽ hiển thị “chưa rõ”.</p>
+              <div class="fh-toolbar">
+                <input id="fh-search" class="fu-input" type="search" placeholder="Tìm @username" aria-label="Tìm trong danh sách Following">
+                <select id="fh-filter" class="fu-input" aria-label="Lọc danh sách Following">
+                  <option value="all">Tất cả</option>
+                  <option value="verified">Có tick</option>
+                  <option value="back">Có follow back</option>
+                  <option value="no-back">Chưa follow back</option>
+                </select>
+                <button id="fh-refresh" class="btn ghost" type="button">Làm mới</button>
+                <button id="fh-export" class="btn ghost" type="button">Xuất CSV</button>
+              </div>
+              <div id="fh-list" class="fh-list" aria-live="polite"></div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- SMM (SmmFollows) — cụm độc lập, dễ gỡ -->
+      <div aria-labelledby="tab-smm" role="tabpanel" id="view-smm" class="view hidden workspace" hidden>
+        <div class="smm-shell fu-shell"><header class="workspace-intro"><span class="uf-eyebrow">DỊCH VỤ TƯƠNG TÁC</span><h2>Quản lý đơn SMM</h2><p>Cấu hình dịch vụ, đặt đơn và theo dõi kết quả.</p></header>
+          <div class="fu-mode segment" role="radiogroup" aria-label="Chế độ SMM">
+            <label class="segment-item">
+              <input type="radio" name="smm-mode" id="smm-mode-order" value="order" checked>
+              <span>Đặt đơn</span>
+            </label>
+            <label class="segment-item">
+              <input type="radio" name="smm-mode" id="smm-mode-scan" value="scan">
+              <span>Quét tài khoản</span>
+            </label>
+          </div>
+
+          <section class="fu-hero panel smm-hero workspace-overview">
+            <div class="fu-hero-top">
+              <div>
+                <div class="fu-live" id="smm-live-dot" aria-hidden="true"></div>
+                <strong id="smm-status-title">SMM</strong>
+                <span class="fu-sub" id="smm-balance">Chưa có số dư</span>
+              </div>
+              <div class="fu-actions">
+                <button type="button" id="smm-btn-balance" class="btn ghost">Số dư</button>
+                <button type="button" id="smm-btn-save" class="btn primary">Lưu cấu hình</button>
+              </div>
+            </div>
+            <div class="metrics fu-metrics" id="smm-hero-metrics"></div>
+            <p id="smm-msg" class="action-msg fu-msg" role="status"></p>
+          </section>
+
+          <details open class="panel workspace-card workspace-disclosure"><summary><span><strong>Kết nối &amp; cấu hình dịch vụ</strong><small>API key, mã dịch vụ và số lượng mỗi đơn.</small></span><span class="uf-chevron" aria-hidden="true">⌄</span></summary><div class="workspace-disclosure-body">
+            
+            <p class="field-hint smm-setup-lead">Hai preset riêng. Chỉ dùng View thì chỉ cần điền View ID — Like để trống.</p>
+            <label class="fu-field grow">
+              <span>API key</span>
+              <input id="smm-api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Key SmmFollows">
+            </label>
+            <div class="smm-key-row">
+              <p class="field-hint smm-hint" id="smm-key-status">Chưa lưu key.</p>
+              <button type="button" id="smm-btn-clear-key" class="btn danger ghost ag-mini">Xóa key</button>
+            </div>
+            <div class="fu-grid smm-svc-grid">
+              <label class="fu-field"><span>Mã dịch vụ lượt xem</span><input id="smm-view-id" list="smm-service-options" inputmode="numeric" placeholder="ID view"></label>
+              <label class="fu-field"><span>Số lượt xem mỗi đơn</span><input id="smm-view-qty" type="number"></label>
+              <label class="fu-field"><span>Mã dịch vụ lượt thích</span><input id="smm-like-id" list="smm-service-options" inputmode="numeric" placeholder="tuỳ chọn"></label>
+              <label class="fu-field"><span>Số lượt thích mỗi đơn</span><input id="smm-like-qty" type="number"></label>
+            </div>
+            <datalist id="smm-service-options"></datalist>
+            <div class="smm-key-row">
+              <p class="field-hint smm-hint" id="smm-services-status">Tải dịch vụ rồi chọn ID loại Default.</p>
+              <button type="button" id="smm-btn-services" class="btn ghost ag-mini">Tải dịch vụ</button>
+            </div>
+          </div></details>
+
+          <div id="smm-pane-order" class="fu-pane">
+            <section class="panel fu-card workspace-card">
+              <div class="uf-section-head workspace-section-head"><span class="uf-section-number">01</span><div><h3>Đặt đơn cho bài viết</h3><p>Nhập link bài trên X và chọn loại tương tác.</p></div></div>
+              <p class="field-hint smm-setup-lead">Một lần một loại. Chỉ muốn view → chọn <strong>View</strong> rồi Đặt đơn.</p>
+              <label class="fu-field grow">
+                <span>Link bài X</span>
+                <input id="smm-order-link" type="url" spellcheck="false" placeholder="https://x.com/user/status/…">
+              </label>
+              <div class="segment smm-metric-seg" role="radiogroup" aria-label="Loại đơn">
+                <label class="segment-item">
+                  <input type="radio" name="smm-order-metric" id="smm-metric-views" value="views" checked>
+                  <span>Lượt xem</span>
+                </label>
+                <label class="segment-item">
+                  <input type="radio" name="smm-order-metric" id="smm-metric-likes" value="likes">
+                  <span>Lượt thích</span>
+                </label>
+              </div>
+              <p class="smm-order-preview" id="smm-order-preview">Sẽ dùng View ID · ×—</p>
+              <button type="button" id="smm-btn-order" class="btn primary grow smm-order-btn">Đặt đơn</button>
+            </section>
+          </div>
+
+          <div id="smm-pane-scan" class="fu-pane hidden" hidden>
+            <section class="panel fu-card workspace-card">
+              <div class="uf-section-head workspace-section-head"><span class="uf-section-number">01</span><div><h3>Quét bài trên tài khoản</h3><p>Tìm bài dưới ngưỡng tương tác bạn đã đặt.</p></div></div>
+              <div class="fu-grid">
+                <label class="fu-field grow"><span>Tài khoản cần quét</span><input id="smm-scan-user" maxlength="16" placeholder="@username"></label>
+                <label class="fu-field"><span>Số bài tối đa</span><input id="smm-scan-limit" type="number"></label>
+                <label class="fu-field"><span>Ngưỡng lượt xem</span><input id="smm-min-views" type="number"></label>
+                <label class="fu-field"><span>Ngưỡng lượt thích</span><input id="smm-min-likes" type="number"></label>
+                <label class="fu-field"><span>Nghỉ giữa lần quét (giây)</span><input id="smm-scan-delay" type="number" step="0.5" title="giây"></label>
+              </div>
+              <label class="fu-check"><input type="checkbox" id="smm-auto-order"><span>Tự đặt đơn khi thiếu (min &gt; 0)</span></label>
+              <p class="field-hint smm-setup-lead">Chỉ auto View: để trống mã Like (hoặc Min like = 0). Chỉ auto Like: để trống mã View (hoặc Min view = 0). Dừng quét vẫn đặt đơn cho bài đã tìm thấy.</p>
+              <div class="fu-actions smm-scan-actions">
+                <button type="button" id="smm-btn-scan" class="btn primary">Bắt đầu quét</button>
+                <button type="button" id="smm-btn-scan-stop" class="btn danger ghost" disabled>Dừng</button>
+                <button type="button" id="smm-btn-retry" class="btn ghost">Thử lại đơn lỗi</button>
+              </div>
+              <p class="field-hint smm-hint" id="smm-scan-status">Sẵn sàng quét.</p>
+              <div class="metrics fu-metrics" id="smm-scan-metrics"></div>
+              <ul class="smm-post-list" id="smm-post-list"></ul>
+            </section>
+          </div>
+
+          <section class="panel fu-card">
+            <div class="fu-card-head">
+              <div class="fu-card-title">Đơn gần đây</div>
+              <button type="button" id="smm-btn-clear-history" class="btn danger ghost ag-mini">Xóa</button>
+            </div>
+            <ul class="smm-order-list" id="smm-order-list"></ul>
+          </section>
+        </div>
+      </div>
+
+      <div aria-labelledby="tab-ai" role="tabpanel" id="view-ai" class="view hidden workspace" hidden><header class="workspace-intro"><span class="uf-eyebrow">SOẠN NỘI DUNG</span><h2>Cấu hình AI</h2><p>Kết nối nhà cung cấp và tùy chỉnh cách AI viết nội dung.</p></header>
+        <section class="panel workspace-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">01</span><div><h3>Kết nối nhà cung cấp</h3><p>API key dùng để soạn trả lời và trích dẫn.</p></div></div>
+          <p class="field-hint">
+            Key để soạn Reply/Quote. Bật/tắt hành động ở tab <strong>Hành vi</strong>.
+          </p>
+          <label class="field">
+            <span>Nhà cung cấp</span>
+            <select id="ai-provider">
+              <option value="openai">OpenAI (GPT)</option>
+              <option value="spacexai">SpaceXAI (xAI / Grok)</option>
+              <option value="custom">Tùy chỉnh · Tương thích OpenAI</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>API key</span>
+            <input id="ai-api-key" type="password" autocomplete="off" spellcheck="false" placeholder="Dán key — để trống nếu giữ key đã lưu">
+          </label>
+          <p class="field-hint" id="ai-key-status">Chưa lưu API key.</p>
+          
+          <label class="field">
+            <span>Mô hình mặc định</span>
+            <input id="ai-model" type="text" spellcheck="false" placeholder="gpt-4o-mini" title="Dùng cho quote/post và khi ô model Pogo / lướt X để trống">
+          </label>
+          <p class="field-hint">Pogo và nút ✨ / lướt X có thể chọn model riêng ở mục hướng dẫn bên dưới.</p>
+          
+          
+        <details class="workspace-inline-details"><summary>Kết nối &amp; tham số nâng cao</summary><div class="workspace-disclosure-body"><label class="field">
+            <span>Địa chỉ API</span>
+            <input id="ai-base-url" type="url" spellcheck="false" placeholder="https://api.openai.com/v1">
+          </label><div class="filters-grid two-col">
+            <label class="field"><span>Độ ngẫu nhiên</span><input id="ai-temperature" type="number" min="0" max="2" step="0.1"></label>
+            <label class="field"><span>Giới hạn token</span><input id="ai-max-tokens" type="number" min="32" max="4000" step="1"></label>
+          </div><p class="field-hint">Với model OpenAI GPT-5/6, extension dùng reasoning low và không gửi Temperature. Max tokens bao gồm cả reasoning; có thể bắt đầu với 2048 rồi điều chỉnh theo kết quả và chi phí.</p></div></details></section>
+
+        <section class="panel workspace-card">
+          <div class="uf-section-head workspace-section-head"><span class="uf-section-number">02</span><div><h3>Hướng dẫn viết nội dung</h3><p>Bật từng loại nội dung và chỉnh hướng dẫn khi cần.</p></div></div>
+          <details class="feature-block">
+            <summary><label class="check-inline"><input type="checkbox" id="ai-reply-enabled"> Trả lời · Chỉ Pogo</label></summary>
+            <label class="field"><span>Model Pogo</span><input id="ai-reply-model" type="text" spellcheck="false" placeholder="Để trống = dùng model mặc định ở mục 01" autocomplete="off"></label>
+            <label class="field"><span>Hướng dẫn hệ thống</span><textarea id="ai-reply-system" rows="7" spellcheck="false"></textarea></label>
+            <label class="field"><span>Mẫu yêu cầu</span><textarea id="ai-reply-user" rows="5" spellcheck="false"></textarea></label>
+            <div class="btn-row">
+              <button type="button" id="btn-ai-reset-reply" class="btn ghost">Khôi phục hướng dẫn Pogo</button>
+            </div>
+            <p class="field-hint">Chỉ chiến dịch Pogo. Prompt + model riêng, không dùng cho nút ✨ hay lướt X. Placeholder: <code>{{author}}</code> <code>{{text}}</code> <code>{{tweet_url}}</code> <code>{{tweet_id}}</code>.</p>
+          </details>
+          <details class="feature-block">
+            <summary><label class="check-inline"><input type="checkbox" id="ai-browse-reply-enabled"> Trả lời · News Feed / Nút ✨</label></summary>
+            <label class="field"><span>Model lướt X / nút Reply</span><input id="ai-browse-reply-model" type="text" spellcheck="false" placeholder="Để trống = dùng model mặc định ở mục 01" autocomplete="off"></label>
+            <label class="field"><span>Hướng dẫn hệ thống</span><textarea id="ai-browse-reply-system" rows="8" spellcheck="false"></textarea></label>
+            <label class="field"><span>Mẫu yêu cầu</span><textarea id="ai-browse-reply-user" rows="5" spellcheck="false"></textarea></label>
+            <div class="btn-row">
+              <button type="button" id="btn-ai-reset-browse-reply" class="btn ghost">Khôi phục hướng dẫn lướt X</button>
+            </div>
+            <p class="field-hint">Home / Following / Lists, list link và nút ✨. Đóng góp góc nhìn cụ thể, thường 15–45 từ và tối đa 280 ký tự, đúng ngôn ngữ bài gốc. Lướt News Feed ngẫu nhiên được phép <code>SKIP_REPLY</code>. <strong>Nút ✨ và list link do bạn chọn luôn yêu cầu tạo reply, không nhận SKIP_REPLY.</strong> Nếu thiếu ngữ cảnh, trả lời phần có căn cứ hoặc hỏi làm rõ, không bịa thông tin. Để trống model riêng để dùng model chung.</p>
+          </details>
+          <details class="feature-block">
+            <summary><label class="check-inline"><input type="checkbox" id="ai-mention-reply-enabled"> Trả lời · Mentions</label></summary>
+            <label class="field"><span>Model Mentions</span><input id="ai-mention-reply-model" type="text" spellcheck="false" placeholder="Để trống = dùng model mặc định ở mục 01" autocomplete="off"></label>
+            <label class="field"><span>Hướng dẫn hệ thống</span><textarea id="ai-mention-reply-system" rows="8" spellcheck="false"></textarea></label>
+            <label class="field"><span>Mẫu yêu cầu</span><textarea id="ai-mention-reply-user" rows="5" spellcheck="false"></textarea></label>
+            <div class="btn-row">
+              <button type="button" id="btn-ai-reset-mention-reply" class="btn ghost">Khôi phục hướng dẫn Mentions</button>
+            </div>
+            <p class="field-hint">Chỉ mention/reply trực tiếp tới bạn, không trả lời bài mới từ tài khoản bật chuông. Giữ đúng người nói và ngôn ngữ mention; không gán chi tiết ảnh của người khác cho tác giả hiện tại. <strong>Agent tự đăng sau khi AI soạn xong.</strong> Nút ✨ tự chọn mục này khi nhận diện mention/reply; không nhận SKIP_REPLY từ AI, nhưng chặn trước khi gọi AI nếu đã có bằng chứng trả lời/gửi đúng tweet. Agent tự tìm Mentions vẫn được bỏ qua spam/thiếu ngữ cảnh. Biến: <code>{{author}}</code> <code>{{text}}</code> <code>{{tweet_url}}</code> <code>{{tweet_id}}</code> <code>{{parent_text}}</code> <code>{{conversation_context}}</code> <code>{{already_replied}}</code>. Không đủ bằng chứng thì trạng thái là <code>unknown</code>, không coi là chưa trả lời. Ngữ cảnh đọc được vẫn bổ sung khi template thiếu biến. Để trống model riêng để dùng model chung.</p>
+          </details>
+          <details class="feature-block">
+            <summary><label class="check-inline"><input type="checkbox" id="ai-quote-enabled"> Trích dẫn bài viết</label></summary>
+            <label class="field"><span>Hướng dẫn hệ thống</span><textarea id="ai-quote-system" rows="3"></textarea></label>
+            <label class="field"><span>Mẫu yêu cầu</span><textarea id="ai-quote-user" rows="3"></textarea></label>
+          </details>
+          <details class="feature-block">
+            <summary><label class="check-inline"><input type="checkbox" id="ai-post-enabled"> Bài viết mới</label></summary>
+            <label class="field"><span>Hướng dẫn hệ thống</span><textarea id="ai-post-system" rows="3"></textarea></label>
+            <label class="field"><span>Mẫu yêu cầu</span><textarea id="ai-post-user" rows="3"></textarea></label>
+          </details>
+          <p class="field-hint">Placeholder: <code>{{author}}</code>, <code>{{text}}</code>, <code>{{tweet_url}}</code>, <code>{{tweet_id}}</code></p>
+        </section>
+
+        <section id="ai-usage" class="panel workspace-card">
+          <h3>03 · Chi phí AI</h3>
+          <p class="field-hint">Chi phí ước tính theo token API trả về và đơn giá bạn nhập; chưa gồm thuế, tín dụng hay phụ phí. Ghi nhận cả lượt soạn, kiểm tra, viết lại và bỏ qua. Không khôi phục được chi phí trước khi bật tính năng. Dữ liệu lưu riêng trên Chrome này.</p>
+          <label class="field"><span>Khoảng thống kê</span><select id="ai-usage-period"><option value="today">Hôm nay</option><option value="month">Tháng này</option><option value="all">Toàn bộ đã ghi nhận</option></select></label>
+          <div id="ai-usage-summary" class="ai-usage-item" aria-live="polite">Chưa có dữ liệu.</div>
+          <div id="ai-usage-details"></div>
+          <details><summary>Đơn giá từng model · USD / 1 triệu token</summary>
+            <p class="field-hint">Nhập theo nhà cung cấp hoặc proxy bạn đang dùng. Nếu không có giá cache riêng, nhập bằng giá đầu vào. Để trống cả ba = chưa đặt giá; nhập 0 nếu miễn phí. Thay đơn giá sẽ tính lại toàn bộ lịch sử. Reasoning đã nằm trong token đầu ra, không cộng lần nữa. Chưa bao gồm phụ phí công cụ, cache write hoặc media tính riêng.</p>
+            <div id="ai-usage-prices"></div>
+            <button type="button" id="btn-ai-prices-save" class="btn primary">Lưu đơn giá</button>
+          </details>
+          <button type="button" id="btn-ai-usage-refresh" class="btn ghost">Cập nhật thống kê</button>
+          <p id="ai-usage-msg" class="action-msg" role="status"></p>
+        </section>
+        <section class="uf-control-bar workspace-controls">
+          <div class="btn-row">
+            <button type="button" id="btn-ai-save" class="btn primary grow">Lưu cấu hình AI</button>
+            <button type="button" id="btn-ai-clear-key" class="btn danger ghost">Xóa API key</button>
+          </div>
+          <p id="ai-msg" class="action-msg" role="status"></p>
+        </section>
+      </div>
+
+      <!-- ACTIVITY -->
+      <div aria-labelledby="tab-activity" role="tabpanel" id="view-activity" class="view hidden workspace" hidden><header class="workspace-intro"><span class="uf-eyebrow">LỊCH SỬ PHIÊN CHẠY</span><h2>Nhật ký hoạt động</h2><p>Theo dõi hành động đã thực hiện và các lỗi cần xử lý.</p></header>
+        <section class="panel workspace-card">
+          
+          <div class="btn-row">
+            <button type="button" id="btn-activity-refresh" class="btn accent">Làm mới</button>
+            <button type="button" id="btn-activity-clear" class="btn danger ghost">Xóa nhật ký</button>
+          </div>
+          <div aria-label="Nhật ký hoạt động của agent" role="log" id="activity-list" class="activity-list" aria-live="polite"></div>
+          <p id="activity-msg" class="action-msg" role="status"></p>
+        </section>
+      </div>
+    </div>
+
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
